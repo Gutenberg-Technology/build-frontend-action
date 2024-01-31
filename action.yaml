@@ -1,0 +1,78 @@
+name: 'Build & test frontend resuable action'
+description: 'Build & test frontend resuable action'
+inputs:
+  env:
+    description: 'Environment'
+    required: true
+    default: 'ci'
+  git-ref:
+    description: 'Git hash, branch or tag'
+    required: true
+    default: 'master'
+  artifact-name:
+    description: 'Artifact name'
+    required: true
+    default: ''
+  build-cmd:
+    description: 'Command for building'
+    required: false
+    default: ''
+  lint-cmd:
+    description: 'Command for linting'
+    required: false
+    default: ''
+  test-cmd:
+    description: 'Command for running testing'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.git-ref }}
+
+    - name: Read .nvmrc
+        id: read-nvmrc
+        run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+    - name: Set Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ steps.read-nvmrc.outputs.node-version }}
+          cache: yarn
+
+    - name: 'Build'
+      run: |
+        if [ -n "${{ inputs.build-cmd }}" ]; then
+          ${{ inputs.build-cmd }}
+        fi
+
+    - name: 'Lint'
+      run: |
+        if [ -n "${{ inputs.lint-cmd }}" ]; then
+          ${{ inputs.lint-cmd }}
+        fi
+
+    - name: 'Test'
+      run: |
+        if [ -n "${{ inputs.test-cmd }}" ]; then
+          ${{ inputs.test-cmd }}
+        fi
+    
+      - name: Archive project files
+        if: inputs.env != 'development'
+        id: archive-project
+        env:
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          tar -czvf ${{ github.workspace }}/mef-frontend-${{ inputs.env }}.tgz dist/mef-frontend
+          echo "artifact-name=mef-frontend-${{ inputs.env }}" >> $GITHUB_OUTPUT
+
+    # - name: 'Archive'
+    #   uses: 'actions/upload-artifact@v2'
+    #   if: inputs.artifact-name != ''
+    #   with:
+    #     name: ${{ inputs.artifact-name }}
+    #     path: 'dist'
+
