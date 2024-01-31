@@ -4,7 +4,7 @@ inputs:
   env:
     description: 'Environment'
     required: true
-    default: 'ci'
+    default: 'development'
   git-ref:
     description: 'Git hash, branch or tag'
     required: true
