@@ -72,6 +72,7 @@ runs:
       run: |
         tar -czvf ${{ github.workspace }}/mef-frontend-${{ inputs.env }}.tgz dist/mef-frontend
         echo "artifact-name=mef-frontend-${{ inputs.env }}" >> $GITHUB_OUTPUT
+      shell: bash
 
     # - name: 'Archive'
     #   uses: 'actions/upload-artifact@v2'
