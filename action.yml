@@ -35,30 +35,35 @@ runs:
     - name: Read .nvmrc
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: Set Node.js version
       uses: actions/setup-node@v3
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
         cache: yarn
+      shell: bash
 
     - name: 'Build'
       run: |
         if [ -n "${{ inputs.build-cmd }}" ]; then
           ${{ inputs.build-cmd }}
         fi
+      shell: bash
 
     - name: 'Lint'
       run: |
         if [ -n "${{ inputs.lint-cmd }}" ]; then
           ${{ inputs.lint-cmd }}
         fi
+      shell: bash
 
     - name: 'Test'
       run: |
         if [ -n "${{ inputs.test-cmd }}" ]; then
           ${{ inputs.test-cmd }}
         fi
+      shell: bash
     
       - name: Archive project files
         if: inputs.env != 'development'
