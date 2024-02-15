@@ -64,14 +64,14 @@ runs:
         fi
       shell: bash
     
-      - name: Archive project files
-        if: inputs.env != 'development'
-        id: archive-project
-        env:
-          GIT_SHA: ${{ github.sha }}
-        run: |
-          tar -czvf ${{ github.workspace }}/mef-frontend-${{ inputs.env }}.tgz dist/mef-frontend
-          echo "artifact-name=mef-frontend-${{ inputs.env }}" >> $GITHUB_OUTPUT
+    - name: Archive project files
+      if: inputs.env != 'development'
+      id: archive-project
+      env:
+        GIT_SHA: ${{ github.sha }}
+      run: |
+        tar -czvf ${{ github.workspace }}/mef-frontend-${{ inputs.env }}.tgz dist/mef-frontend
+        echo "artifact-name=mef-frontend-${{ inputs.env }}" >> $GITHUB_OUTPUT
 
     # - name: 'Archive'
     #   uses: 'actions/upload-artifact@v2'
