@@ -33,14 +33,14 @@ runs:
         ref: ${{ inputs.git-ref }}
 
     - name: Read .nvmrc
-        id: read-nvmrc
-        run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+      id: read-nvmrc
+      run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
 
     - name: Set Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ steps.read-nvmrc.outputs.node-version }}
-          cache: yarn
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ steps.read-nvmrc.outputs.node-version }}
+        cache: yarn
 
     - name: 'Build'
       run: |
