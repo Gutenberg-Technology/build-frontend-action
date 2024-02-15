@@ -42,7 +42,6 @@ runs:
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
         cache: yarn
-      shell: bash
 
     - name: 'Build'
       run: |
