@@ -48,14 +48,14 @@ runs:
 
     - name: 'Install'
       run: |
-        if [ ! -z "${{ inputs.install-cmd }}" ]; then
+        if [ "${{ inputs.install-cmd }}" != "" ]; then
           ${{ inputs.install-cmd }}
         fi
       shell: bash
 
     - name: 'Build'
       run: |
-        if [ ! -z "${{ inputs.build-cmd }}" ]; then
+        if [ "${{ inputs.build-cmd }}" != ""]; then
           ${{ inputs.build-cmd }}
         else
           echo "No build command provided"
@@ -64,7 +64,7 @@ runs:
 
     - name: 'Lint'
       run: |
-        if [ ! -z "${{ inputs.lint-cmd }}" ]; then
+        if [ "${{ inputs.lint-cmd }}" != "" ]; then
           ${{ inputs.lint-cmd }}
         else
           echo "No lint command provided"
@@ -73,7 +73,7 @@ runs:
 
     - name: 'Test'
       run: |
-        if [ ! -z "${{ inputs.test-cmd }}" ]; then
+        if [ "${{ inputs.test-cmd }}" != "" ]; then
           ${{ inputs.test-cmd }}
         else
           echo "No test command provided"
