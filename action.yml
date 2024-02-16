@@ -13,6 +13,10 @@ inputs:
     description: 'Artifact name'
     required: true
     default: ''
+  install-cmd:
+    description: 'Command for installing dependencies'
+    required: false
+    default: ''
   build-cmd:
     description: 'Command for building'
     required: false
@@ -41,7 +45,13 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
-        cache: yarn
+
+    - name: 'Install'
+      run: |
+        if [ -n "${{ inputs.install-cmd }}" ]; then
+          ${{ inputs.install-cmd }}
+        fi
+      shell: bash
 
     - name: 'Build'
       run: |
