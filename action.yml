@@ -1,9 +1,7 @@
 name: 'Build & test frontend reusable action'
 description: 'Build & test frontend reusable action'
+author: 'Gutenberg Technology'
 
-defaults:
-  run:
-    shell: bash
 
 inputs:
   env:
@@ -34,6 +32,7 @@ runs:
     - name: 'Read .nvmrc'
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: Set Node.js version
       uses: actions/setup-node@v4
@@ -42,17 +41,21 @@ runs:
 
     - name: 'Install'
       run: ${{ inputs.install-cmd }}
+      shell: bash
 
     - name: 'Lint'
       if: inputs.lint-cmd != ''
       run: ${{ inputs.lint-cmd }}
+      shell: bash
 
     - name: 'Build'
       run: ${{ inputs.build-cmd }}
+      shell: bash
 
     - name: 'Test'
       if: inputs.test-cmd != ''
       run: ${{ inputs.test-cmd }}
+      shell: bash
     
     # - name: Archive project files
     #   if: inputs.env != 'development'
