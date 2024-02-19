@@ -26,7 +26,7 @@ inputs:
     default: ''
 runs:
   using: 'composite'
-    - name: Read .nvmrc
+    - name: 'Read .nvmrc'
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
 
