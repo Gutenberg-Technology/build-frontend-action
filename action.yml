@@ -1,6 +1,10 @@
 name: 'Build & test frontend reusable action'
 description: 'Build & test frontend reusable action'
 
+defaults:
+  run:
+    shell: bash
+
 inputs:
   env:
     description: 'Environment'
