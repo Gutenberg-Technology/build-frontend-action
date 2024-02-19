@@ -1,26 +1,25 @@
-name: 'Build & test frontend resuable action'
-description: 'Build & test frontend resuable action'
+name: 'Build & test frontend reusable action'
+description: 'Build & test frontend reusable action'
+
+defaults:
+  run:
+    shell: bash
+
 inputs:
   env:
     description: 'Environment'
     required: true
     default: 'development'
-  git-ref:
-    description: 'Git hash, branch or tag'
-    required: true
-    default: 'master'
   artifact-name:
     description: 'Artifact name'
     required: true
     default: ''
   install-cmd:
     description: 'Command for installing dependencies'
-    required: false
-    default: ''
+    required: true
   build-cmd:
     description: 'Command for building'
-    required: false
-    default: ''
+    required: true
   lint-cmd:
     description: 'Command for linting'
     required: false
@@ -31,64 +30,38 @@ inputs:
     default: ''
 runs:
   using: 'composite'
-  steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ inputs.git-ref }}
-
     - name: Read .nvmrc
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-      shell: bash
 
     - name: Set Node.js version
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
 
     - name: 'Install'
-      run: |
-        if [[ "${{ inputs.install-cmd }}" != "" ]]; then
-          ${{ inputs.install-cmd }}
-        fi
-      shell: bash
-
-    - name: 'Build'
-      run: |
-        if [[ "${{ inputs.build-cmd }}" != "" ]]; then
-          ${{ inputs.build-cmd }}
-        else
-          echo "No build command provided"
-        fi
-      shell: bash
+      run: ${{ inputs.install-cmd }}
 
     - name: 'Lint'
-      run: |
-        if [[ "${{ inputs.lint-cmd }}" != "" ]]; then
-          ${{ inputs.lint-cmd }}
-        else
-          echo "No lint command provided"
-        fi
-      shell: bash
+      if: inputs.lint-cmd != ''
+      run: ${{ inputs.lint-cmd }}
+
+    - name: 'Build'
+      run: ${{ inputs.build-cmd }}
 
     - name: 'Test'
-      run: |
-        if [[ "${{ inputs.test-cmd }}" != "" ]]; then
-          ${{ inputs.test-cmd }}
-        else
-          echo "No test command provided"
-        fi
-      shell: bash
+      if: inputs.test-cmd != ''
+      run: ${{ inputs.test-cmd }}
     
-    - name: Archive project files
-      if: inputs.env != 'development'
-      id: archive-project
-      env:
-        GIT_SHA: ${{ github.sha }}
-      run: |
-        tar -czvf ${{ github.workspace }}/mef-frontend-${{ inputs.env }}.tgz dist/mef-frontend
-        echo "artifact-name=mef-frontend-${{ inputs.env }}" >> $GITHUB_OUTPUT
-      shell: bash
+    # - name: Archive project files
+    #   if: inputs.env != 'development'
+    #   id: archive-project
+    #   env:
+    #     GIT_SHA: ${{ github.sha }}
+    #   run: |
+    #     tar -czvf ${{ github.workspace }}/mef-frontend.tgz dist/mef-frontend
+    #     echo "artifact-name=mef-frontend" >> $GITHUB_OUTPUT
+    #   shell: bash
 
     # - name: 'Archive'
     #   uses: 'actions/upload-artifact@v2'
