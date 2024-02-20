@@ -28,6 +28,7 @@ runs:
     - name: 'Read .nvmrc'
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: Set Node.js version
       uses: actions/setup-node@v4
@@ -36,17 +37,21 @@ runs:
 
     - name: 'Install'
       run: ${{ inputs.install-cmd }}
+      shell: bash
 
     - name: 'Lint'
       if: inputs.lint-cmd != ''
       run: ${{ inputs.lint-cmd }}
+      shell: bash
 
     - name: 'Build'
       run: ${{ inputs.build-cmd }}
+      shell: bash
 
     - name: 'Test'
       if: inputs.test-cmd != ''
       run: ${{ inputs.test-cmd }}
+      shell: bash
 
     - name: Archive project files
       if: inputs.artifact-name != ''
@@ -54,6 +59,7 @@ runs:
       run: |
         tar -cvf ${{ github.workspace }}/${{ inputs.artifact-name }}.tar dist/${{ inputs.artifact-name }}
         echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: 'Archive'
       uses: 'actions/upload-artifact@v4.3.1'
