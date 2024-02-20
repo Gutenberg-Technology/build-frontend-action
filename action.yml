@@ -4,13 +4,9 @@ author: 'Gutenberg Technology'
 
 
 inputs:
-  env:
-    description: 'Environment'
-    required: true
-    default: 'development'
   artifact-name:
     description: 'Artifact name'
-    required: true
+    required: false
     default: ''
   install-cmd:
     description: 'Command for installing dependencies'
@@ -32,7 +28,6 @@ runs:
     - name: 'Read .nvmrc'
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-      shell: bash
 
     - name: Set Node.js version
       uses: actions/setup-node@v4
@@ -41,36 +36,29 @@ runs:
 
     - name: 'Install'
       run: ${{ inputs.install-cmd }}
-      shell: bash
 
     - name: 'Lint'
       if: inputs.lint-cmd != ''
       run: ${{ inputs.lint-cmd }}
-      shell: bash
 
     - name: 'Build'
       run: ${{ inputs.build-cmd }}
-      shell: bash
 
     - name: 'Test'
       if: inputs.test-cmd != ''
       run: ${{ inputs.test-cmd }}
-      shell: bash
-    
-    # - name: Archive project files
-    #   if: inputs.env != 'development'
-    #   id: archive-project
-    #   env:
-    #     GIT_SHA: ${{ github.sha }}
-    #   run: |
-    #     tar -czvf ${{ github.workspace }}/mef-frontend.tgz dist/mef-frontend
-    #     echo "artifact-name=mef-frontend" >> $GITHUB_OUTPUT
-    #   shell: bash
 
-    # - name: 'Archive'
-    #   uses: 'actions/upload-artifact@v2'
-    #   if: inputs.artifact-name != ''
-    #   with:
-    #     name: ${{ inputs.artifact-name }}
-    #     path: 'dist'
+    - name: Archive project files
+      if: inputs.artifact-name != ''
+      id: archive-project
+      run: |
+        tar -cvf ${{ github.workspace }}/${{ inputs.artifact-name }}.tar dist/${{ inputs.artifact-name }}
+        echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_OUTPUT
 
+    - name: 'Archive'
+      uses: 'actions/upload-artifact@v4.3.1'
+      if: inputs.artifact-name != ''
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ github.workspace }}/${{ inputs.artifact-name }}.tar
+        if-no-files-found: error
