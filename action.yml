@@ -53,6 +53,10 @@ runs:
       run: ${{ inputs.test-cmd }}
       shell: bash
 
+    - name: 'ls'
+      run: pwd && ls -la
+      shell: bash
+
     - name: Archive project files
       if: inputs.artifact-name != ''
       id: archive-project
