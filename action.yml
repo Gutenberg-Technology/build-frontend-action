@@ -53,10 +53,6 @@ runs:
       run: ${{ inputs.test-cmd }}
       shell: bash
 
-    - name: 'ls before tar'
-      run: pwd && ls -la
-      shell: bash
-
     - name: 'Upload Archive'
       uses: 'actions/upload-artifact@v4'
       if: inputs.artifact-name != ''
