@@ -57,22 +57,10 @@ runs:
       run: pwd && ls -la
       shell: bash
 
-    - name: Archive project files
-      if: inputs.artifact-name != ''
-      id: archive-project
-      run: |
-        tar -cvf ${{ github.workspace }}/${{ inputs.artifact-name }}.tar dist/${{ inputs.artifact-name }}
-        echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: 'ls after tar'
-      run: pwd && ls -la
-      shell: bash
-
     - name: 'Upload Archive'
-      uses: 'actions/upload-artifact@v4.3.1'
+      uses: 'actions/upload-artifact@v4'
       if: inputs.artifact-name != ''
       with:
         name: ${{ inputs.artifact-name }}
-        path: ${{ github.workspace }}/${{ inputs.artifact-name }}.tar
+        path: dist
         if-no-files-found: error
