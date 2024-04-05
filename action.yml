@@ -22,6 +22,10 @@ inputs:
     description: 'Command for running testing'
     required: false
     default: ''
+  dist_path:
+    description: 'Path to the dist folder'
+    required: true
+    default: 'dist'
 runs:
   using: 'composite'
   steps:
@@ -58,5 +62,5 @@ runs:
       if: inputs.artifact-name != ''
       with:
         name: ${{ inputs.artifact-name }}
-        path: dist
+        path: ${{ inputs.dist_path }}
         if-no-files-found: error
