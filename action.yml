@@ -8,6 +8,10 @@ inputs:
     description: 'Artifact name'
     required: false
     default: ''
+  artifact-path:
+    description: 'Artifact path'
+    required: false
+    default: 'dist'
   install-cmd:
     description: 'Command for installing dependencies'
     required: true
@@ -22,10 +26,7 @@ inputs:
     description: 'Command for running testing'
     required: false
     default: ''
-  dist_path:
-    description: 'Path to the dist folder'
-    required: true
-    default: 'dist'
+
 runs:
   using: 'composite'
   steps:
@@ -62,5 +63,5 @@ runs:
       if: inputs.artifact-name != ''
       with:
         name: ${{ inputs.artifact-name }}
-        path: ${{ inputs.dist_path }}
+        path: ${{ inputs.artifact-path }}
         if-no-files-found: error
