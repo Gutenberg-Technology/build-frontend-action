@@ -12,6 +12,10 @@ inputs:
     description: 'Artifact path'
     required: false
     default: 'dist'
+  pre-install-cmd:
+    description: 'Command for pre-install'
+    required: false
+    default: ''
   install-cmd:
     description: 'Command for installing dependencies'
     required: true
@@ -39,6 +43,10 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
+
+    - name: 'Pre Install'
+      run: ${{ inputs.pre-install-cmd }}
+      shell: bash
 
     - name: 'Install'
       run: ${{ inputs.install-cmd }}
