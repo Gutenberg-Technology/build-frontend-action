@@ -1,40 +1,43 @@
-name: 'Build & test frontend reusable action'
-description: 'Build & test frontend reusable action'
-author: 'Gutenberg Technology'
-
+name: "Build & test frontend reusable action"
+description: "Build & test frontend reusable action"
+author: "Gutenberg Technology"
 
 inputs:
   artifact-name:
-    description: 'Artifact name'
+    description: "Artifact name"
     required: false
-    default: ''
+    default: ""
   artifact-path:
-    description: 'Artifact path'
+    description: "Artifact path"
     required: false
-    default: 'dist'
+    default: "dist"
+  cache-package-manager:
+    description: "Package manager for caching (npm, yarn, etc)"
+    required: false
+    default: ""
   pre-install-cmd:
-    description: 'Command for pre-install'
+    description: "Command for pre-install"
     required: false
-    default: ''
+    default: ""
   install-cmd:
-    description: 'Command for installing dependencies'
+    description: "Command for installing dependencies"
     required: true
   build-cmd:
-    description: 'Command for building'
+    description: "Command for building"
     required: true
   lint-cmd:
-    description: 'Command for linting'
+    description: "Command for linting"
     required: false
-    default: ''
+    default: ""
   test-cmd:
-    description: 'Command for running testing'
+    description: "Command for running testing"
     required: false
-    default: ''
+    default: ""
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: 'Read .nvmrc'
+    - name: "Read .nvmrc"
       id: read-nvmrc
       run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
       shell: bash
@@ -43,31 +46,32 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
+        cache: ${{ inputs.cache-package-manager }}
 
-    - name: 'Pre Install'
+    - name: "Pre Install"
       run: ${{ inputs.pre-install-cmd }}
       shell: bash
 
-    - name: 'Install'
+    - name: "Install"
       run: ${{ inputs.install-cmd }}
       shell: bash
 
-    - name: 'Lint'
+    - name: "Lint"
       if: inputs.lint-cmd != ''
       run: ${{ inputs.lint-cmd }}
       shell: bash
 
-    - name: 'Build'
+    - name: "Build"
       run: ${{ inputs.build-cmd }}
       shell: bash
 
-    - name: 'Test'
+    - name: "Test"
       if: inputs.test-cmd != ''
       run: ${{ inputs.test-cmd }}
       shell: bash
 
-    - name: 'Upload Archive'
-      uses: 'actions/upload-artifact@v4'
+    - name: "Upload Archive"
+      uses: "actions/upload-artifact@v4"
       if: inputs.artifact-name != ''
       with:
         name: ${{ inputs.artifact-name }}

@@ -2,6 +2,8 @@
 
 ## Scenario
 
+:warning: Requires a `.nvrmc` file in the root of the repository.
+
 This Composite Action is a kind of wrapper for the following actions:
 
 - Setup Node.js environment
@@ -15,6 +17,8 @@ This Composite Action is a kind of wrapper for the following actions:
 ## Inputs
 
 The Composite Action takes as inputs the `install`, `build`, `lint` and `test` commands to run and artifact upload options.
+
+`cache-package-manager` input is used to manage cache in GitHub Actions, see [setup-node](https://github.com/actions/setup-node) and  [Advanced Usage](https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-data) for more details.
 
 See the [action.yml](action.yml) file for more details.
 
@@ -38,6 +42,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: Gutenberg-Technology/build-frontend-action@v1.0.0
         with:
+          cache-package-manager: 'yarn'
           install-cmd: 'yarn install --immutable'
           build-cmd: 'yarn build:all'
           test-cmd: 'yarn test'
@@ -57,6 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: Gutenberg-Technology/build-frontend-action@v1.0.0
         with:
+          cache-package-manager: 'yarn'
           install-cmd: 'yarn install --immutable'
           lint-cmd: 'yarn style'
           build-cmd: 'yarn build:all'
