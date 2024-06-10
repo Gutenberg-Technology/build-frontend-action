@@ -25,6 +25,10 @@ inputs:
   build-cmd:
     description: "Command for building"
     required: true
+  post-build-cmd:
+    description: "Command for post-build"
+    required: false
+    default: ""
   lint-cmd:
     description: "Command for linting"
     required: false
@@ -63,6 +67,10 @@ runs:
 
     - name: "Build"
       run: ${{ inputs.build-cmd }}
+      shell: bash
+
+    - name: "Post build cmd"
+      run: ${{ inputs.post-build-cmd }}
       shell: bash
 
     - name: "Test"
