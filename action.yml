@@ -52,20 +52,20 @@ runs:
         node-version: ${{ steps.read-nvmrc.outputs.node-version }}
         cache: ${{ inputs.cache-package-manager }}
 
-    - name: "Pre Install"
+    - name: "Pre Install cmd"
       run: ${{ inputs.pre-install-cmd }}
       shell: bash
 
-    - name: "Install"
+    - name: "Install :arrow_down:"
       run: ${{ inputs.install-cmd }}
       shell: bash
 
-    - name: "Lint"
+    - name: "Lint :broom:"
       if: inputs.lint-cmd != ''
       run: ${{ inputs.lint-cmd }}
       shell: bash
 
-    - name: "Build"
+    - name: "Build :hammer:"
       run: ${{ inputs.build-cmd }}
       shell: bash
 
@@ -73,7 +73,7 @@ runs:
       run: ${{ inputs.post-build-cmd }}
       shell: bash
 
-    - name: "Test"
+    - name: "Test :test_tube:"
       if: inputs.test-cmd != ''
       run: ${{ inputs.test-cmd }}
       shell: bash
